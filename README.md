@@ -36,11 +36,11 @@ We are using `pipenv` to set up a correct shell, so enter:
     pipenv install    # To download all dependencies (should be automatic)
 
 You will need to make sure that your system is functional by running the following
-`support` programs:
+programs in the `support` directory (cd into support):
 
-  * `support/has_library.py` makes sure you have the OpenCV library installed
+  * `has_library.py` makes sure you have the OpenCV library installed
 
-  * `support/has_camera --channel 1` makes sure you have a USB camera properly
+  * `has_camera --channel 1` makes sure you have a USB camera properly
            connected and readable. Give `--help` to explain the options.
 
 
