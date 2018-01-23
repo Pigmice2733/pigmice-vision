@@ -1,7 +1,7 @@
-Reuseable supporting Python3 module for image analysis and *vision tracking*
-on our robots. Game-specific features (for particular FRC years) will not live
-in this project, as this library will be shared each year. This project uses
-the [opencv](https://docs.opencv.org/3.4.0/d6/d00/tutorial_py_root.html) library.
+Reuseable supporting Python3 module for image analysis and *vision tracking* on
+our robots. Game-specific features (for particular FRC years) will not live in
+this project, as this library will be shared each year. This project uses the
+[opencv](https://docs.opencv.org/3.4.0/d6/d00/tutorial_py_root.html) library.
 
 We expect that most Python scripts in this package to be both *stand-alone* (run
 it directly from the command line) as well as a *module* where the functions can
@@ -23,11 +23,12 @@ we have found the following useful:
 Using the Project
 =================
 
-As a reusable project, this repository would be a dependency to other game-specific projects.
+As a reusable project, this repository would be a dependency to other
+game-specific projects.
 
-**Note:** Eventually, we should flesh this section out with details on how to include
-this project as a dependency for other projects, but for the moment, we'll gloss over
-that feature.
+**Note:** Eventually, we should flesh this section out with details on how to
+include this project as a dependency for other projects, but for the moment,
+we'll gloss over that feature.
 
 
 We are using `pipenv` to set up a correct shell, so enter:
@@ -42,6 +43,40 @@ programs in the `support` directory (cd into support):
 
   * `has_camera --channel 1` makes sure you have a USB camera properly
            connected and readable. Give `--help` to explain the options.
+
+
+Calibrating Cameras
+-------------------
+
+Cameras can have small distortions in the lens that may be unnoticeable under
+typical scenarios, but could adversely affect the precision of our
+code...besides, correcting for abnormalities is a great initial project in
+OpenCV.
+
+First, print a checkerboard pattern, run the following program in the `support`
+directory:
+
+    verify_checkerboard.py --channel 1 --rows 8 --columns 8
+
+Where the `--channel` option specifies the USB channel of your camera. `0` is
+typically the built-in canera on most laptops, so `1` may be a good choice. Make
+sure the `--rows` and `--columns` are correct for your pattern (as it doesn't
+*have* to be a standard 8x8 board). Hold the pattern in front of your camera,
+and if all goes well, the corners for each board will have a colored circle.
+This means, you can use this pattern for calibration.
+
+To calibrate your camera, run the following program from the `tools` directory:
+
+    tools/camera_calibrator.py --channel 0 --rows 8 --columns 8
+
+Again, adjust the options to match your computer system and checkerboard
+pattern. Follow the instructions printed on the screen, and when you press `s`,
+you will have a file containing the calibration data. The other programs will
+call the `lib.calibration()` function with the name of this file, in order to
+`undistort` the camera, e.g.
+
+    mtx, dist, newcammtx = calibration('calibration-values.npz')
+    newimage = cv2.undistort(img, mtx, dist, None, newcammtx)
 
 
 Developing the Project

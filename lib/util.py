@@ -3,6 +3,7 @@
 """Small collection of 'static' utility functions."""
 
 import cv2
+import numpy as np
 
 
 def has_pressed(key, letter):
@@ -30,3 +31,16 @@ def is_pressing(letter):
     """
     key = cv2.waitKey(1)
     return has_pressed(key, letter)
+
+
+def calibration(filename="calibration-values.npz"):
+    """Returns the camera matrix, distortion, and optimal camera
+    matrix values from the callibration file created by the script,
+    `camera_calibrator.py`.
+
+    To use this function, call it, and then call `undistort`, like:
+    mtx, dist, newcammtx = calibration('calibration-values.npz')
+    newimage = cv2.undistort(img, mtx, dist, None, newcammtx)
+    """
+    cal = np.load(filename)
+    return cal["mtx"], cal["dist"], cal["newcammtx"]
