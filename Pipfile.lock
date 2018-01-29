@@ -1,20 +1,20 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "47c17a6eabea307499316b59fecf8a9c9cbb46bff426a35e9eb4b12cf478391a"
+            "sha256": "d0dc09da2f4f1f289c67ff9d779e2b2eaeda10e1c0af9b426107c7ffe2f3ad4f"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
-            "implementation_version": "3.6.4",
+            "implementation_version": "3.5.2",
             "os_name": "posix",
             "platform_machine": "x86_64",
             "platform_python_implementation": "CPython",
-            "platform_release": "17.3.0",
-            "platform_system": "Darwin",
-            "platform_version": "Darwin Kernel Version 17.3.0: Thu Nov  9 18:09:22 PST 2017; root:xnu-4570.31.3~1/RELEASE_X86_64",
-            "python_full_version": "3.6.4",
-            "python_version": "3.6",
-            "sys_platform": "darwin"
+            "platform_release": "4.13.0-26-generic",
+            "platform_system": "Linux",
+            "platform_version": "#29~16.04.2-Ubuntu SMP Tue Jan 9 22:00:44 UTC 2018",
+            "python_full_version": "3.5.2",
+            "python_version": "3.5",
+            "sys_platform": "linux"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -29,10 +29,10 @@
     "default": {
         "astroid": {
             "hashes": [
-                "sha256:badf6917ef7eb0ade0ea6eae347aed1e3f8f4c9375a02916f5cc450b3c8a64c0",
-                "sha256:71dadba2110008e2c03f9fde662ddd2053db3c0489d0e03c94e828a0399edd4f"
+                "sha256:db5cfc9af6e0b60cd07c19478fb54021fc20d2d189882fbcbc94fc69a8aecc58",
+                "sha256:f0a0e386dbca9f93ea9f3ea6f32b37a24720502b7baa9cb17c3976a680d43a06"
             ],
-            "version": "==1.6.0"
+            "version": "==1.6.1"
         },
         "attrs": {
             "hashes": [
@@ -192,12 +192,30 @@
             ],
             "version": "==1.6.0"
         },
+        "pyfrc": {
+            "hashes": [
+                "sha256:0e10f08c3dd77f6d24788dc7c03184805671aebb79722069f5c6ed6371630709"
+            ],
+            "version": "==2018.0.5"
+        },
         "pylint": {
             "hashes": [
-                "sha256:c8e59da0f2f9990eb00aad1c1de16cd7809315842ebccc3f65ca9df46213df3b",
-                "sha256:3035e44e37cd09919e9edad5573af01d7c6b9c52a0ebb4781185ae7ab690458b"
+                "sha256:156839bedaa798febee72893beef00c650c2e7abafb5586fc7a6a56be7f80412",
+                "sha256:4fe3b99da7e789545327b75548cee6b511e4faa98afe268130fea1af4b5ec022"
             ],
-            "version": "==1.8.1"
+            "version": "==1.8.2"
+        },
+        "pynetconsole": {
+            "hashes": [
+                "sha256:5f3ffad2f313cf16fe41a1a7caf4da6d1afcdadff5fbea6b4afdb1eb6773953a"
+            ],
+            "version": "==2.0.1"
+        },
+        "pynetworktables": {
+            "hashes": [
+                "sha256:54f455b971ea509cebb4e5a05a55e7210f4ff1ad33e51d057c1889619d90e5f7"
+            ],
+            "version": "==2018.0.1"
         },
         "pytest": {
             "hashes": [
@@ -206,12 +224,42 @@
             ],
             "version": "==3.3.2"
         },
+        "robotpy-hal-base": {
+            "hashes": [
+                "sha256:01abc4c091b66150fd0217840141c7dbce87439da2a78711387c4cee5a4d7b43"
+            ],
+            "version": "==2018.0.11"
+        },
+        "robotpy-hal-sim": {
+            "hashes": [
+                "sha256:3ca62011de390ab6341ec1e3d69492ffbf27a7935a5b3ac79e3c98e4133e96f4"
+            ],
+            "version": "==2018.0.11"
+        },
+        "robotpy-installer": {
+            "hashes": [
+                "sha256:088cb34dc41e9662d1296336e24b2e4af075efe32e9d934cb4ba495acf0df001"
+            ],
+            "version": "==2018.0.1"
+        },
+        "robotpy-wpilib-utilities": {
+            "hashes": [
+                "sha256:0e6facee7fa5f444c1cba4d032cde35f1011356f06f68c89042f9533b70cc36f"
+            ],
+            "version": "==2018.0.1"
+        },
         "six": {
             "hashes": [
                 "sha256:832dc0e10feb1aa2c68dcc57dbb658f1c7e65b9b61af69048abc87a2db00a0eb",
                 "sha256:70e8a77beed4562e7f14fe23a786b54f6296e34344c23bc42f07b15018ff98e9"
             ],
             "version": "==1.11.0"
+        },
+        "wpilib": {
+            "hashes": [
+                "sha256:fbf5ff09be0f798b60ae65aee5fc4e11fd0968e2e90e2f69568326e5235f56bc"
+            ],
+            "version": "==2018.0.11"
         },
         "wrapt": {
             "hashes": [
