@@ -11,7 +11,7 @@ table = None
 verbose = False
 
 
-def setup(server, name='tracker', printtoo=False):
+def setup(server, name='vision', printtoo=False):
     """
     Configures and connects to a NetworkTables service running
     on the server given (an IP address, typically). It then
@@ -25,18 +25,7 @@ def setup(server, name='tracker', printtoo=False):
     # Step 1. Initiate the connection. These always pass:
     NetworkTables.initialize(server=server)
     table = NetworkTables.getTable(name)
-
-    # Step 2. Wait for an actual connection before proceeding:
-    tries = 0
-
-    while not table.isConnected() and tries < 5:
-        print("Trying to connect to: {0}".format(server))
-        tries = tries + 1
-        time.sleep(1)
-
-    # Step 3. If we still can't connect, the library will continue to
-    # try and connect, so we might as well return the table and get
-    # going.   NOTE: IS THIS A VALID ASSUMPTION!?
+    time.sleep(1)
     return table
 
 
@@ -49,17 +38,15 @@ def _print(message):
         print(message)
 
 
-def send(key, value, table=table):
+def send(key, value):
     """
     Sends a value to the NetworkTables service under the `key`
     name. It also prints the value if the debug option is given.
     """
+    global table, verbose
     try:
-        if table:
-            if isinstance(value, str):
-                table.putString(key, value)
-            else:
-                table.putNumber(key, value)
+        #if table:
+            table.putValue(key, value)
     except Exception as e:
         print("ERROR: {0}".format(e))
 
