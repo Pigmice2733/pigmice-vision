@@ -61,6 +61,7 @@ From this point on, to start the server run the following command from your term
     java -jar support/OutlineViewer-1.0.1.jar
 
 When the app comes up, click the **start server** button.
+To make sure the server is running correctly, run support/has_network_tables_server.py
 
   [nt1]: http://robotpy.readthedocs.io/projects/pynetworktables/en/stable/
   [nt2]: https://www.java.com/en/download/help/download_options.xml
