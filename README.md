@@ -44,6 +44,30 @@ programs in the `support` directory (cd into support):
   * `has_camera --channel 1` makes sure you have a USB camera properly
            connected and readable. Give `--help` to explain the options.
 
+Network Tables
+-------------------
+
+The [NetworkTables project][nt1] is a library we use to communicate the results of our image analysis and vision tracking work to the RoboRIO and the autonomous code will read the values from it (check out [these details][nt3]).
+Typically, the RoboRIO will automatically start a NetworkTables *server*, and our programs connect to it as a *client*. However, while we are developing, you may want to start a server locally on your system and your code can connect with it. For this, we want to start a *visual server* (that not only allows clients to connect to it, but also visually shows what values are going into it).
+
+To install, follow these steps:
+
+1. [Install Java 8][nt2]: `sudo apt-get install openjdk-8-jre`
+2. Download latest Jar version of [OutlineViewer][nt4]
+3. Move OutlineViewer to the `support` directory folder: `mv OutlineViewer-1.0.1.jar ~/github/pigmice-vision/support/`
+
+From this point on, to start the server run the following command from your terminal:
+
+    java -jar support/OutlineViewer-1.0.1.jar
+
+When the app comes up, click the **start server** button.
+To make sure the server is running correctly, run support/has_network_tables_server.py
+
+  [nt1]: http://robotpy.readthedocs.io/projects/pynetworktables/en/stable/
+  [nt2]: https://www.java.com/en/download/help/download_options.xml
+  [nt3]: http://robotpy.readthedocs.io/en/stable/guide/nt.html#networktables-guide
+  [nt4]: http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/first/wpilib/networktables/OutlineViewer/1.0.1/
+  [nt5]: http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/first/wpilib/SmartDashboard/3.0.0/SmartDashboard-3.0.0.jar
 
 Calibrating Cameras
 -------------------
