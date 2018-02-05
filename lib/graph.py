@@ -27,11 +27,6 @@ def smoothing_func(window_type):
     output:
         the smoothing function
     """
-    # We could raise an error if the window type is not entered correctly, ala:
-    if window_type not in ['flat', 'hanning', 'hamming', 'bartlett', 'blackman']:
-        raise ValueError("Window type is not one of 'flat', 'hanning', 'hamming', 'bartlett', 'blackman'")
-
-    # Or we could just use a default value of 'flat' ...
     return {
         'hanning': np.hanning,
         'hamming': np.hamming,
@@ -83,5 +78,4 @@ def smooth(x, window_len=11, window='hanning'):
     s = np.r_[x[window_len-1:0:-1], x, x[-2:-window_len-1:-1]]
     w = sf(window_len)
 
-    # print(len(s))
     return np.convolve(w/w.sum(), s, mode='valid')
