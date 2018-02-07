@@ -19,9 +19,16 @@ def get_frame(cap, scaling_factor):
 def run_mask():
     cap = cv2.VideoCapture(0)
     scaling_factor = 0.5
+    lower = np.asarray([0,0,0])
+    upper = np.asarray([250,250,250])
 
     # Iterate until the user presses ESC key
     while True:
+        # Check if the user pressed ESC key
+        c = cv2.waitKey(5)
+        if c == 27:
+            break
+
         frame = get_frame(cap, scaling_factor)
         # hsv_max = color_range.hsv_max(frame)
         # Convert the HSV colorspace
@@ -30,10 +37,10 @@ def run_mask():
         # Define 'blue' range in HSV colorspace
         # lower = np.array([60,100,100])
         # upper = np.array([180,255,255])
+        if c == ord("c"):
+            lower, upper = color_range(hsv)
+            print("lower", lower, "upper", upper)
 
-        lower, upper = color_range(hsv)
-
-        # Threshold the HSV image to get only blue color
         mask = cv2.inRange(hsv, lower, upper)
 
         # Bitwise-AND mask and original image
@@ -41,12 +48,12 @@ def run_mask():
         res = cv2.medianBlur(res, 5)
 
         cv2.imshow('Original image', frame)
+        cv2.imshow("Mask", mask)
+        cv2.imshow("Lower Color", lower)
+        cv2.imshow("Upper Color", upper)
         cv2.imshow('Color Detector', res)
 
-        # Check if the user pressed ESC key
-        c = cv2.waitKey(5)
-        if c == 27:
-            break
+
 
     cv2.destroyAllWindows()
 

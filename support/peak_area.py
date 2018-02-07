@@ -3,7 +3,7 @@
 import numpy as np
 from context import lib  # flake8: noqa
 from lib.rand import plot, random_bumpy_peak
-from lib.math import top_bell, max_peak_deviation
+from lib.hist_math import top_bell, max_peak_deviation
 
 
 def demo():
