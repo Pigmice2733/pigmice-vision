@@ -44,6 +44,19 @@ programs in the `support` directory (cd into support):
   * `has_camera --channel 1` makes sure you have a USB camera properly
            connected and readable. Give `--help` to explain the options.
 
+Color Tracking
+--------------
+`lib` contains the resusable functions, but unless we are debugging, we shouldn't run any programs here
+`tools` contains the programs that we can run to do things, usually calls functions in lib
+`support` contains our experiments and other supporting programs (nothing to actually be used on the robot)
+
+Programs:
+  * `tools/camera_calibration.py` calibrates camera to not distort the image
+  * `tools/color_calibration.py` allows user to press c to get the color range and saves to file
+  * `support/target_mask.py` for our experiment in tracking a target via a color
+  * `lib/color_mask.py` The math behind creating a mask that color_calibration will call
+  * `lib/math_extras.py` The math behind the histograms
+
 Network Tables
 -------------------
 
