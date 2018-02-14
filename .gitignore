@@ -99,3 +99,5 @@ ENV/
 .mypy_cache/
 .DS_Store
 support/OutlineViewer*.jar
+.color_range.json
+captured-image.jpg
