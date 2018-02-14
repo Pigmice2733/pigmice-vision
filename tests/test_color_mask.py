@@ -6,7 +6,7 @@ to demonstrate visually how the smooth function can work.
 """
 
 from context import lib  # flake8: noqa
-from lib import graph
+from lib import color_mask
 import numpy as np
 from numpy.random import randn
 import matplotlib.pyplot as plt
@@ -19,7 +19,7 @@ def test_smooth_hanning():
     """
     data = np.array([-0.6, 0.0, -0.6, -1.0, -0.4, 0.1, 0.6, 1.0, 0.4, 0.0, 0.4])
     expected = np.array([0.0, -0.6, 0.0, -0.6, -1.0, -0.4, 0.1, 0.6, 1.0, 0.4, 0.0, 0.4, 0.0])
-    y = graph.smooth(data, 3, 'hanning')
+    y = color_mask.smooth(data, 3, 'hanning')
     assert np.array_equiv(y, expected)
 
 
@@ -31,7 +31,7 @@ def test_slope_to_curve():
     """
     data = np.array([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0])
     expected=np.array([1.0, 0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 5.0])
-    y = graph.smooth(data, 3)
+    y = color_mask.smooth(data, 3)
     assert np.array_equal(y, expected)
 
 
@@ -45,7 +45,7 @@ def smooth_demo():
     t = np.linspace(-4, 4, 100)
     x = np.sin(t)
     xn = x + randn(len(t)) * 0.1
-    y = graph.smooth(x)
+    y = color_mask.smooth(x)
     ws = 31
 
     # Top Graph:
@@ -66,7 +66,7 @@ def smooth_demo():
     plt.plot(x)
     plt.plot(xn)
     for w in windows:
-        plt.plot(graph.smooth(xn,10,w))
+        plt.plot(color_mask.smooth(xn,10,w))
     l=['original signal', 'signal with noise']
     l.extend(windows)
 

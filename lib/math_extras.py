@@ -25,7 +25,7 @@ def top_bell(data):
     absolute maximum in a sequence... the range of the top peak of a bumpy
     curve values.
     """
-    max_y = np.max(data)
+    # max_y = np.max(data)
     max_x = np.argmax(data)  # The maximum value (x position)
     mins, maxs = local_min_max(data)
     smaller = list(filter(lambda i: i < max_x, mins))
