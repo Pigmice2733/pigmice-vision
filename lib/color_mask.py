@@ -28,6 +28,12 @@ def load_range(filename='.color_range.json'):
     with open(filename, 'r') as infile:
         data = json.load(infile)
         return np.array(data['lower']), np.array(data['upper'])
+        #l = np.array(data["lower"])
+        #u = np.array(data["upper"])
+        #lower = [float(x) for x in data["l"]]
+        #upper = [float(x) for x in data["u"]]
+
+        #return lower, upper
 
 
 def color_histogram(chan):
