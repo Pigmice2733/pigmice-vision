@@ -2,38 +2,30 @@
 
 import cv2
 import numpy as np
-import json
+from . import config
 # Turns color values into bell curve and returns local mins
+from . import target_tracker
 from .math_extras import top_bell
 
 
-def save_range(lower, upper, filename='.color_range.json'):
+def save_range(color, lower, upper):
     """
     Given  the lower and upper color range values, write them out to filename.
     See load_range() for reading the values later.
     """
-    data = {
-        'lower': lower.tolist(),
-        'upper': upper.tolist()
-    }
-    with open(filename, 'w') as outfile:
-        json.dump(data, outfile)
+    config.set('color', color, 'lower', lower.tolist())
+    config.set('color', color, 'upper', upper.tolist())
+    config.save()
 
 
-def load_range(filename='.color_range.json'):
+def load_range(color):
     """
     Read a filename containing a JSON data structure that holds the upper and
     lower color range values previously calculated, calibrated, and stored.
     """
-    with open(filename, 'r') as infile:
-        data = json.load(infile)
-        return np.array(data['lower']), np.array(data['upper'])
-        #l = np.array(data["lower"])
-        #u = np.array(data["upper"])
-        #lower = [float(x) for x in data["l"]]
-        #upper = [float(x) for x in data["u"]]
-
-        #return lower, upper
+    lower = config.get_default('color', color, 'lower', [0, 0, 0])
+    upper = config.get_default('color', color, 'upper', [255, 255, 255])
+    return np.array(lower), np.array(upper)
 
 
 def color_histogram(chan):
@@ -90,9 +82,73 @@ def color_range(image):
     return(lower, upper)  # returns lowest and highest most frequent values
 
 
-# Collection of functions that work on 1D datasets and help with displaying
-# those datasets in graph form.
-#
+def get_mask(hsv_img, lower, upper):
+    """
+    Given an image and color range, return a simplified masked image.
+    """
+    thresh = cv2.inRange(hsv_img, lower, upper)
+
+    # perform some clean up before contour operations
+    # thresh = cv2.erode(thresh, None, iterations=2)
+    # thresh = cv2.dilate(thresh, None, iterations=2)
+
+    return thresh
+
+
+def get_contours(img):
+    """
+    Contours are a curve joining all the continuous points along the
+    boundary of the same color or intensity. The list of contours are
+    sorted based on size from smallest to largest.
+    """
+    # _ = image that is ignored
+    _, contours, hierarchy = cv2.findContours(img.copy(), cv2.RETR_EXTERNAL,
+                                              cv2.CHAIN_APPROX_SIMPLE)
+    return sorted(contours, key=cv2.contourArea)
+
+
+def single_target(img, orig=[]):
+    """
+    Logic to find the center of a single target, such as a powercube.
+    Returns center of object (x,y coordinate on image frame), size,
+    and orientation of object.
+    """
+    global DEBUG
+
+    contours = get_contours(img)
+
+    if len(contours) > 0:
+        # ROI = region of interest, ie. largest contour (last in contours list)
+        contour = contours[-1]
+        roi = cv2.convexHull(contour)
+
+        # Surround the contour shape in green:
+        if len(orig) > 0:
+            cv2.drawContours(orig, [roi], 0, (0, 255, 0), 4)
+
+        size = target_tracker.target_size(roi, orig)
+        width, height, orientation = target_tracker.height_width(roi, orig)
+        center, xpos, x, ypos, y = target_tracker.offset_from_center(roi, img)
+
+        return {
+            'contour': {'x': center[0], 'y': center[1]},
+            'size': size,
+            'height': height,
+            'width': width,
+            'orientation': orientation,
+            'xpos': [xpos, x],
+            "ypos": [ypos, y]
+        }
+
+
+def double_target(img):
+    """
+    Logic to find the center of two objects, such as two pieces of vision tape.
+    Returns center of object (x,y coordinate on image frame), size,
+    and orientation of object.
+    """
+    pass
+
 # The smoothing feature was taken from this SciPy Cookbook chapter:
 # http://scipy-cookbook.readthedocs.io/items/SignalSmooth.html
 
