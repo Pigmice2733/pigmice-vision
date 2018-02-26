@@ -23,6 +23,7 @@ def save_data(key, lower, upper):
     Simple wrapper around the color_'s save_mask()
     function. If DEBUG, this prints extra information.
     """
+    c = Config()
     color_label = False
 
     if util.has_pressed(key, 'y') or util.has_pressed(key, 'c'):
@@ -33,8 +34,8 @@ def save_data(key, lower, upper):
     if color_label:
         if DEBUG:
             print("Saved {} as lower: {}  upper: {}".format(color_label, lower, upper))
-        color_mask.save_range(color_label, lower, upper)
-
+        dc = color_mask.pack(lower, upper)
+        c.set("color", color_label, dc)
 
 def show_data(image):
     if DEBUG:

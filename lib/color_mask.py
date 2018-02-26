@@ -2,30 +2,27 @@
 
 import cv2
 import numpy as np
-from . import config
-# Turns color values into bell curve and returns local mins
-from . import target_tracker
 from .math_extras import top_bell
 
 
-def save_range(color, lower, upper):
+def pack_range(lower, upper):
     """
-    Given  the lower and upper color range values, write them out to filename.
-    See load_range() for reading the values later.
+    Takes lower and upper color range values and packs them in a dictionary.
     """
-    config.set('color', color, 'lower', lower.tolist())
-    config.set('color', color, 'upper', upper.tolist())
-    config.save()
+    return {
+        "lower": lower.tolist(),  # tolist converts numpy array into a regular
+        "upper": upper.tolist()  # array that the dictionary can use
+    }
 
 
-def load_range(color):
+def unpack_range(d):
     """
-    Read a filename containing a JSON data structure that holds the upper and
-    lower color range values previously calculated, calibrated, and stored.
+    Takes the dictionary in pack_range and converts them to individual
+    numpy arrays.
     """
-    lower = config.get_default('color', color, 'lower', [0, 0, 0])
-    upper = config.get_default('color', color, 'upper', [255, 255, 255])
-    return np.array(lower), np.array(upper)
+    lower = np.array(d["lower"])
+    upper = np.array(d["upper"])
+    return lower, upper
 
 
 def color_histogram(chan):
@@ -49,7 +46,6 @@ def image_colors(image):
     """
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     # Split into the three channels of hue, saturation, and value.
-    # We then initialize a tuple of strings representing the colors.
     chans = cv2.split(hsv)
 
     return [color_histogram(chan) for chan in chans]
@@ -57,13 +53,9 @@ def image_colors(image):
 
 def color_range(image):
     """
-    Smooth values (from graph.py) and with max_peak_deviation finds the most
-    frequent colors as a list of two values that form a _range_ of the most
-    prominent color in image.
-
-    It does this by making a bell curve from the images' most frequently used
-    color, as well as its neighbors, by sloping downwards on both sides to the
-    curve's local mins.
+    Smooth values and find the bell curve of the most frequent color.
+    The lower and upper ranges are found from the minimum and maximum values
+    in this bell curve.
     """
     min_color = []
     max_color = []
@@ -105,40 +97,6 @@ def get_contours(img):
     _, contours, hierarchy = cv2.findContours(img.copy(), cv2.RETR_EXTERNAL,
                                               cv2.CHAIN_APPROX_SIMPLE)
     return sorted(contours, key=cv2.contourArea)
-
-
-def single_target(img, orig=[]):
-    """
-    Logic to find the center of a single target, such as a powercube.
-    Returns center of object (x,y coordinate on image frame), size,
-    and orientation of object.
-    """
-    global DEBUG
-
-    contours = get_contours(img)
-
-    if len(contours) > 0:
-        # ROI = region of interest, ie. largest contour (last in contours list)
-        contour = contours[-1]
-        roi = cv2.convexHull(contour)
-
-        # Surround the contour shape in green:
-        if len(orig) > 0:
-            cv2.drawContours(orig, [roi], 0, (0, 255, 0), 4)
-
-        size = target_tracker.target_size(roi, orig)
-        width, height, orientation = target_tracker.height_width(roi, orig)
-        center, xpos, x, ypos, y = target_tracker.offset_from_center(roi, img)
-
-        return {
-            'contour': {'x': center[0], 'y': center[1]},
-            'size': size,
-            'height': height,
-            'width': width,
-            'orientation': orientation,
-            'xpos': [xpos, x],
-            "ypos": [ypos, y]
-        }
 
 
 def double_target(img):
@@ -223,3 +181,4 @@ def smooth(x, window_len=11, window='hanning'):
     w = sf(window_len)
 
     return np.convolve(w/w.sum(), s, mode='valid')
+

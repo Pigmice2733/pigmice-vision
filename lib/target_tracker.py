@@ -1,8 +1,13 @@
 """ Finds Center of objects, and then it's position of either left or right """
 import cv2
+from lib import color_mask
 
 
 def target_size(roi, img=[]):
+    """
+    Creates a circle around a given ROI (region of interest) to return
+    the radius of the object.
+    """
     (x, y), radius = cv2.minEnclosingCircle(roi)
     radius = round(radius)
     if len(img) > 0:
@@ -31,6 +36,11 @@ def find_contour_center(contour):
 
 
 def offset_from_center(roi, img):
+    """
+    Describes if the object is to the right, left, or straight in the middle
+    of the screen, this is the same for the y coordinates of up and down.
+    This could be used to help the line the object in the center of the screen.
+    """
     cx, cy = find_contour_center(roi)
     center = (cx, cy)
     cv2.circle(img, (cx, cy), 3, (0, 0, 255), 3)
@@ -56,6 +66,11 @@ def offset_from_center(roi, img):
 
 
 def height_width(roi, img=[]):
+    """
+    Creates a bounding box (rectange) around a ROI and returns the height,
+    width, and the orientation of the object (it's positioned horizontally
+    or vertically).
+    """
     x, y, width, height = cv2.boundingRect(roi)
     if len(img) > 0:
         cv2.rectangle(img, (x, y), (x+width, y+height), (255, 0, 0), 4)
@@ -66,3 +81,37 @@ def height_width(roi, img=[]):
         orientation = "vertical"
 
     return height, width, orientation
+
+
+def single_target(img, orig=[]):
+    """
+    Logic to find the center of a single target, such as a powercube.
+    Returns center of object (x,y coordinate on image frame), size,
+    and orientation of object.
+    """
+
+    contours = color_mask.get_contours(img)
+
+    if len(contours) > 0:
+        # ROI = region of interest, ie. largest contour (last in contours list)
+        contour = contours[-1]
+        roi = cv2.convexHull(contour)
+
+        # Surround the contour shape in green:
+        if len(orig) > 0:
+            cv2.drawContours(orig, [roi], 0, (0, 255, 0), 4)
+
+        size = target_size(roi, orig)
+        width, height, orientation = height_width(roi, orig)
+        center, xpos, x, ypos, y = offset_from_center(roi, img)
+
+        return {
+            'center': {'x': center[0], 'y': center[1]},
+            'size': size,
+            'height': height,
+            'width': width,
+            'orientation': orientation,
+            'xpos': [xpos, x],
+            "ypos": [ypos, y]
+        }
+

@@ -1,13 +1,8 @@
 #!/usr/bin/env python
-"""Test the functions in the lib/graph file.
-
-This test program can also run as a stand-alone application
-to demonstrate visually how the smooth function can work.
-"""
+"""Test the functions in the lib/config file."""
 
 from context import lib  # flake8: noqa
-from lib import config
-import json
+from lib.config import Config
 import tempfile
 import pytest
 
@@ -16,7 +11,8 @@ import pytest
 def run_around_tests():
     # Code that will run before each test, as we need to
     # set the configuration to an empty dictionary:
-    config.__configuration = config.recursivedict()
+    global empty_config
+    empty_config = Config(None, {})
 
     # A test function will be run at this point
     yield
@@ -26,56 +22,39 @@ def run_around_tests():
 
 def test_get_default_default():
     "Without previously setting a value, the get_default should return a default."
-    assert config.get_default('foo', 'bar', 'blah') == 'blah'
+    global empty_config
+    assert empty_config.get_default('foo', 'bar', 'blah') == 'blah'
 
 
 def test_get_and_set():
-    assert config.set('foo', 'bar', 42) == None
-    assert config.get('foo', 'bar') == 42
+    global empty_config
+    assert empty_config.set('foo', 'bar', 42) == 42
+    assert empty_config.get('foo', 'bar') == 42
 
 
 def test_get_and_no_set():
-    assert config.get('foo', 'bar') == None
+    global empty_config
+    with pytest.raises(KeyError):
+        assert empty_config.get('foo', 'bar')
 
 
 def test_get_and_set_default():
-    assert config.get_default('foo', 'ding', 'bing-bing') == 'bing-bing'
-    assert config.set('foo', 'ding', 42) == None
-    assert config.get_default('foo', 'ding', 'badda-bing') == 42
-
-
-def test_values_simple_dict():
-    "Make sure the ``values`` function returns a simple dictionary by default."
-    d = config.values()
-    assert isinstance(d, dict)
-    assert d == {}
+    global empty_config
+    assert empty_config.get_default('foo', 'ding', 'bing-bing') == 'bing-bing'
+    assert empty_config.set('foo', 'ding', 42) == 42
+    assert empty_config.get_default('foo', 'ding', 'badda-bing') == 42
 
 
 def test_save():
-    config.__configuration['bob']['dog'] = 42
-    tf = tempfile.NamedTemporaryFile(suffix='.json')
-    config.save(tf.name)
-    with open(tf.name, "r") as infile:
-        d = json.load(infile)
-        assert d == {'bob': {'dog': 42}}
+    "Tests that we don't get an exception if we try to save a configuration file"
+    tf = tempfile.NamedTemporaryFile(suffix='.yaml')
+    c = Config(tf.name, {'foo':42, 'bar': 71})
+    c.save()
 
 
 def test_save_and_load():
-    config.__configuration['bob']['dog'] = 42
-    tf = tempfile.NamedTemporaryFile(suffix='.json')
-    config.save(tf.name)
+    # Load an configuration file:
+    c = Config("tests/test_config.yaml")
+    print(c.params)
 
-    # Reset the configuration:
-    config.__configuration = config.recursivedict()
-    config.load(tf.name)
-
-    assert config.__configuration['bob']['dog'] == 42
-
-
-def test_get_regular_dictionary():
-    config.__configuration['bob']['dog']['foo'] = 'bar'
-    assert config.get('bob', 'dog') == {'foo': 'bar'}
-
-
-if __name__ == '__main__':
-    unittest.main()
+    assert c.params['channel'] == 1
