@@ -8,24 +8,24 @@ from . import target_tracker
 from .math_extras import top_bell
 
 
-def save_range(color, lower, upper):
+def pack_range(lower, upper):
     """
-    Given  the lower and upper color range values, write them out to filename.
-    See load_range() for reading the values later.
+    Takes the lower and upper color range values and packs them in a dictionary.
     """
-    config.set('color', color, 'lower', lower.tolist())
-    config.set('color', color, 'upper', upper.tolist())
-    config.save()
+    return {
+        "lower": lower.tolist(), # tolist converts numpy array into a regular
+        "upper": upper.tolist()  # array that the dictionary can use
+    }
 
 
-def load_range(color):
+def unpack_range(d):
     """
-    Read a filename containing a JSON data structure that holds the upper and
-    lower color range values previously calculated, calibrated, and stored.
+    Takes the dictionary in pack_range and converts them to individual
+    numpy arrays. 
     """
-    lower = config.get_default('color', color, 'lower', [0, 0, 0])
-    upper = config.get_default('color', color, 'upper', [255, 255, 255])
-    return np.array(lower), np.array(upper)
+    lower = np.array(d["lower"])
+    upper = np.array(d["upper"])
+    return lower, upper
 
 
 def color_histogram(chan):
@@ -131,7 +131,7 @@ def single_target(img, orig=[]):
         center, xpos, x, ypos, y = target_tracker.offset_from_center(roi, img)
 
         return {
-            'contour': {'x': center[0], 'y': center[1]},
+            'center': {'x': center[0], 'y': center[1]},
             'size': size,
             'height': height,
             'width': width,

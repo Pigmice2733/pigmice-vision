@@ -3,7 +3,7 @@ from networktables import NetworkTables
 import time
 
 __table = None
-__verbose = True
+__verbose = False
 
 
 def _print(message):

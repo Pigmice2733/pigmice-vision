@@ -75,7 +75,10 @@ def get_hsv(camera):
     """
     Grab a frame and convert to hsv.
     """
-    grabbed, img = camera.read()
+    got_image = False
+    while not got_image:
+        got_image, img = camera.read()
+
     # h, w, c = frame.shape
     # width = 600
     # height = int((w/600)*h)
