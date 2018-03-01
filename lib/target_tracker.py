@@ -115,3 +115,11 @@ def single_target(img, orig=[]):
             "ypos": [ypos, y]
         }
 
+
+def double_target(img):
+    """
+    Logic to find the center of two objects, such as two pieces of vision tape.
+    Returns center of object (x,y coordinate on image frame), size,
+    and orientation of object.
+    """
+    pass
