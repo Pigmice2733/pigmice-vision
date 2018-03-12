@@ -1,0 +1,8 @@
+color:
+  green:
+    lower: [70, 86, 6]
+    upper: [90, 255, 255]
+  yellow:
+    lower: [20, 70, 160]
+    upper: [40, 170, 212]
+channel: 1

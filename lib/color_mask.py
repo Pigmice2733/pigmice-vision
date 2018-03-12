@@ -2,32 +2,27 @@
 
 import cv2
 import numpy as np
-import json
-# Turns color values into bell curve and returns local mins
 from .math_extras import top_bell
 
 
-def save_range(lower, upper, filename='.color_range.json'):
+def pack_range(lower, upper):
     """
-    Given  the lower and upper color range values, write them out to filename.
-    See load_range() for reading the values later.
+    Takes lower and upper color range values and packs them in a dictionary.
     """
-    data = {
-        'lower': lower.tolist(),
-        'upper': upper.tolist()
+    return {
+        "lower": lower.tolist(),  # tolist converts numpy array into a regular
+        "upper": upper.tolist()  # array that the dictionary can use
     }
-    with open(filename, 'w') as outfile:
-        json.dump(data, outfile)
 
 
-def load_range(filename='.color_range.json'):
+def unpack_range(d):
     """
-    Read a filename containing a JSON data structure that holds the upper and
-    lower color range values previously calculated, calibrated, and stored.
+    Takes the dictionary in pack_range and converts them to individual
+    numpy arrays.
     """
-    with open(filename, 'r') as infile:
-        data = json.load(infile)
-        return np.array(data['lower']), np.array(data['upper'])
+    lower = np.array(d["lower"])
+    upper = np.array(d["upper"])
+    return lower, upper
 
 
 def color_histogram(chan):
@@ -51,7 +46,6 @@ def image_colors(image):
     """
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     # Split into the three channels of hue, saturation, and value.
-    # We then initialize a tuple of strings representing the colors.
     chans = cv2.split(hsv)
 
     return [color_histogram(chan) for chan in chans]
@@ -59,13 +53,9 @@ def image_colors(image):
 
 def color_range(image):
     """
-    Smooth values (from graph.py) and with max_peak_deviation finds the most
-    frequent colors as a list of two values that form a _range_ of the most
-    prominent color in image.
-
-    It does this by making a bell curve from the images' most frequently used
-    color, as well as its neighbors, by sloping downwards on both sides to the
-    curve's local mins.
+    Smooth values and find the bell curve of the most frequent color.
+    The lower and upper ranges are found from the minimum and maximum values
+    in this bell curve.
     """
     min_color = []
     max_color = []
@@ -84,9 +74,31 @@ def color_range(image):
     return(lower, upper)  # returns lowest and highest most frequent values
 
 
-# Collection of functions that work on 1D datasets and help with displaying
-# those datasets in graph form.
-#
+def get_mask(hsv_img, lower, upper):
+    """
+    Given an image and color range, return a simplified masked image.
+    """
+    thresh = cv2.inRange(hsv_img, lower, upper)
+
+    # perform some clean up before contour operations
+    # thresh = cv2.erode(thresh, None, iterations=2)
+    # thresh = cv2.dilate(thresh, None, iterations=2)
+
+    return thresh
+
+
+def get_contours(img):
+    """
+    Contours are a curve joining all the continuous points along the
+    boundary of the same color or intensity. The list of contours are
+    sorted based on size from smallest to largest.
+    """
+    # _ = image that is ignored
+    _, contours, hierarchy = cv2.findContours(img.copy(), cv2.RETR_EXTERNAL,
+                                              cv2.CHAIN_APPROX_SIMPLE)
+    return sorted(contours, key=cv2.contourArea)
+
+
 # The smoothing feature was taken from this SciPy Cookbook chapter:
 # http://scipy-cookbook.readthedocs.io/items/SignalSmooth.html
 
