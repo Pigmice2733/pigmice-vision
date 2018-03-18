@@ -9,6 +9,7 @@ import argparse
 from lib import color_mask
 from lib import util
 from lib import rand
+from lib import config
 
 # If true, we can print some extra information (as well save capture images)
 DEBUG = False
@@ -23,7 +24,7 @@ def save_data(key, lower, upper):
     Simple wrapper around the color_'s save_mask()
     function. If DEBUG, this prints extra information.
     """
-    c = Config()
+    c = config.Config()
     color_label = False
 
     if util.has_pressed(key, 'y') or util.has_pressed(key, 'c'):
@@ -34,7 +35,7 @@ def save_data(key, lower, upper):
     if color_label:
         if DEBUG:
             print("Saved {} as lower: {}  upper: {}".format(color_label, lower, upper))
-        dc = color_mask.pack(lower, upper)
+        dc = color_mask.pack_range(lower, upper)
         c.set("color", color_label, dc)
 
 def show_data(image):
