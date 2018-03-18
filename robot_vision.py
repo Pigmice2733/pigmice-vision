@@ -5,6 +5,7 @@ Use `java -jar support/OutlineViewer-1.0.1.jar` in terminal to create a local
 server, once you have everything installed (see README)
 """
 from lib import config, tables, target_tracker, color_mask, util
+# from support import cube_distance
 import argparse
 
 def run(cfg):
@@ -54,6 +55,7 @@ def send_target_data(target):
         tables.send('xmag', 0)
         tables.send("ydir", "")
         tables.send("ymag", 0)
+
 
 if __name__ == '__main__':
     # Able to add through the command line what config file to use, but the
