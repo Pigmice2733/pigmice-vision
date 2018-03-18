@@ -67,6 +67,7 @@ def send_target(distance, angle):
     send("target-distance", distance)
     send("target-angle", angle)
 
+
 def send_fudge(key, value):
     """
     Sends a value to the fudge subtable in NetworkTables.
@@ -81,7 +82,8 @@ def send_fudge(key, value):
     except Exception as e:
         print("ERROR: {0}".format(e))
 
-def send_fudge(key, value):
+
+def get_fudge(key, value):
     """
     Gets a value from the fudge subtable in NetworkTables.
     """
