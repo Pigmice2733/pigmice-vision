@@ -1,0 +1,12 @@
+numpy
+opencv-python
+pytest
+flake8
+pylint
+mock
+pynetworktables
+pyfrc
+scipy
+matplotlib
+bpython
+pyyaml
