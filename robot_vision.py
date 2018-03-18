@@ -12,8 +12,15 @@ def run(cfg):
     channel = cfg.get('channel')
     server = cfg.get('networktables')
     lu = cfg.get("color", "yellow")
+
+    fudges = cfg.get_default("fudges", {"center_x": 0,
+                                        "center_y": 0
+                                        })
+
     lower, upper = color_mask.unpack_range(lu)
+
     camera, width, height = util.get_video(channel)
+
     debug = cfg.get_default("debug", False)
     tables.setup(server, printtoo = debug)
 
@@ -27,13 +34,14 @@ def run(cfg):
         target = target_tracker.single_target(masked_img)
         if debug:
             print("target:", target)
-        send_target_data(target)
+        send_target_data(target, fudges)
+        update_fudges(tables, cfg)
 
 
-def send_target_data(target):
+def send_target_data(target, fudges):
     if target is not None:
-        tables.send('center_x', target["center"]["x"])
-        tables.send('center_y', target["center"]["y"])
+        tables.send('center_x', target["center"]["x"] + fudges["center_x"])
+        tables.send('center_y', target["center"]["y"] + fudges["center_y"])
         # tables.send('distance', target.distance)
         tables.send('orientation',target["orientation"])
         tables.send('size', target["size"])
@@ -54,6 +62,19 @@ def send_target_data(target):
         tables.send('xmag', 0)
         tables.send("ydir", "")
         tables.send("ymag", 0)
+
+def update_fudges(tables, cfg):
+    """
+    Compare the values that ma
+    """
+    x = tables.get_fudge("center_x")
+    y = tables.get_fudge("center_y")
+    if x != cfg.get("fudges", "center_x"):
+        cfg.set("fudges", "center_x", x)
+        cfg.save()
+    if y != cfg.get("fudges", "center_y"):
+        cfg.set("fudges", "center_y", y)
+        cfg.save()
 
 if __name__ == '__main__':
     # Able to add through the command line what config file to use, but the

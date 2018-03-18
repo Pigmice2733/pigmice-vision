@@ -66,3 +66,33 @@ def send_target(distance, angle):
     """
     send("target-distance", distance)
     send("target-angle", angle)
+
+
+def send_fudge(key, value):
+    """
+    Sends a value to the fudge subtable in NetworkTables.
+    """
+    try:
+        if __table:
+            fudges = __table.getSubTable("fudges")
+            return fudges.putValue(key, value)
+        else:
+            msg = "Not connected to NetworkTables server. Run setup() first."
+            raise Exception(msg)
+    except Exception as e:
+        print("ERROR: {0}".format(e))
+
+
+def get_fudge(key, value):
+    """
+    Gets a value from the fudge subtable in NetworkTables.
+    """
+    try:
+        if __table:
+            fudges = __table.getSubTable("fudges")
+            return fudges.getValue(key)
+        else:
+            msg = "Not connected to NetworkTables server. Run setup() first."
+            raise Exception(msg)
+    except Exception as e:
+        print("ERROR: {0}".format(e))
