@@ -1,0 +1,12 @@
+[Unit]
+Description=Pigmice vision
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/pigmice-vision
+ExecStart=python3 robot_vision.py
+
+[Install]
+WantedBy=multi-user.target
