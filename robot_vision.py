@@ -65,10 +65,13 @@ def send_target_data(target, fudges):
 
 def update_fudges(tables, cfg):
     """
-    Compare the values that ma
+    Compare the values that may have been edited on the NetworkTables server
+    with the current configuration values. If they are different,
+    the configuration values are changed to the new values and saved in the
+    configuration file.
     """
-    x = tables.get_fudge("center_x")
-    y = tables.get_fudge("center_y")
+    x = tables.get_fudges("center_x")
+    y = tables.get_fudges("center_y")
     if x != cfg.get("fudges", "center_x"):
         cfg.set("fudges", "center_x", x)
         cfg.save()
