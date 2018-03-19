@@ -171,10 +171,13 @@ Next, let's install `git` and the other dependencies:
     $ sudo apt-get install -y python-numpy python-yaml
     $ sudo pip install pynetworktables
 
+<<<<<<< HEAD
 You'll also need to install opencv. Follow these instructions to build
 [OpenCV][pif] by scratch.
   [pif]: https://www.pyimagesearch.com/2017/09/04/raspbian-stretch-install-opencv-3-python-on-your-raspberry-pi/
 
+=======
+>>>>>>> 81f2df51764b686f06a1fafab6cf8add51161bf4
 Now, we can get the latest version of our code on to the system:
 
     $ git clone https://github.com/pigmice2733/pigmice-vision
@@ -196,21 +199,34 @@ We will be setting the static (not changing) ip address through the pi's dhcp
 file. To change this, nano (this allows us to edit a file through the command
 line) into the file.
 After ssh-ing into the pi, type this command in the command prompt:
+<<<<<<< HEAD
 
     $ sudo nano /etc/dhcpcd.conf
 
 Scroll to the bottom and un-comment this line
 
     # static ip_address=192.168.1.23/24
+=======
+    $ sudo nano /etc/dhcpcd.conf
+
+Scroll to the bottom and un-comment this line
+    $ static ip_address=192.168.1.23/24
+>>>>>>> 81f2df51764b686f06a1fafab6cf8add51161bf4
 
 Change the IP address to start with the first three numbers of your computer
 (You can find your computer's IP address by typing ifconfig).
 For example the roborio's IP address starts with 10.27.33
+<<<<<<< HEAD
 
     $ static ip_address=10.27.33.23/24
 
 The last number can be whatever you'd like.
 
+=======
+    $ static ip_address=10.27.33.23/24
+
+The last number can be whatever you'd like.
+>>>>>>> 81f2df51764b686f06a1fafab6cf8add51161bf4
     $ static ip_addres=10.27.33.20
 
 Setting up the files in the raspi folder
@@ -218,6 +234,7 @@ Setting up the files in the raspi folder
 
 After downloading the raspi folder from github you'll need to move some of the
 files to different directories on your computer.
+<<<<<<< HEAD
 You will need to make a copy of `pigmice-vision.service` to your home directory.
 Eventually, you'll want to install `Requirements.txt` will be run on the raspi
 to download all the necessary libraries and packages.
@@ -238,11 +255,30 @@ to view and will save them, rather than in the terminal shell. To view these
 errors cat the file.
 
     $ cat robot_vision_output.txt 
+=======
+Move requirements.text and pigmice-vision.service to your home directory.
+Requirements.text will be run on the raspi to download all the necessary
+libraries and packages.
+
+If you want to run the program on your computer you'll need to make a copy of
+it and change the routes, for example:
+Instead of WorkingDirectory=/home/pi/pigmice-vision
+you would instead write WorkingDirectory=/home/user/github/pigmice-vision
+
+start-robot.txt needs to in the pigmice-vision home directory (this is where
+robot-vision is as well).
+>>>>>>> 81f2df51764b686f06a1fafab6cf8add51161bf4
 
 Changing raspi's username and password
 --------------------------------------
 
+<<<<<<< HEAD
 To create the password
 
+=======
+Once you are logged onto the pi, type
+    $ sudo adduser bob
+This will create a new user account. Then to create the password
+>>>>>>> 81f2df51764b686f06a1fafab6cf8add51161bf4
     $ sudo passwd bob -d
 This will ask you for the current password and to make a new one.
