@@ -14,7 +14,7 @@ def _print(message):
         print(message)
 
 
-def setup(server, name='vision', printtoo=True):
+def setup(server, name='vision', printtoo=False):
     """
     Configures and connects to a NetworkTables service running
     on the server given (typically an IP address).
@@ -75,7 +75,8 @@ def send_fudge(key, value):
     try:
         if __table:
             fudges = __table.getSubTable("fudges")
-            return fudges.putValue(key, value)
+            _print("  - fudges.{0}: {1}".format(key, value))
+            return fudges.putNumber(key, value)
         else:
             msg = "Not connected to NetworkTables server. Run setup() first."
             raise Exception(msg)
@@ -83,14 +84,14 @@ def send_fudge(key, value):
         print("ERROR: {0}".format(e))
 
 
-def get_fudge(key, value):
+def get_fudge(key, defaultValue=None):
     """
     Gets a value from the fudge subtable in NetworkTables.
     """
     try:
         if __table:
             fudges = __table.getSubTable("fudges")
-            return fudges.getValue(key)
+            return fudges.getNumber(key, defaultValue)
         else:
             msg = "Not connected to NetworkTables server. Run setup() first."
             raise Exception(msg)

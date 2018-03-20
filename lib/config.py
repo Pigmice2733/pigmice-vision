@@ -108,8 +108,8 @@ class Config:
         Creates a YAML configuration file based on the values of the `params`
         dictionary.
         """
-        with open(self.config_file) as infile:
-            self.params = yaml.load(infile)
+        with open(self.config_file, 'w') as outfile:
+            yaml.dump(self.params, outfile)
 
     def get(self, *kvs):
         """
