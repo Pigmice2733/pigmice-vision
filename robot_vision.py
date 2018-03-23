@@ -50,7 +50,8 @@ def run(cfg):
     debug = cfg.get_default("debug", 1)
 
     global fudges
-    fudges = cfg.get_default("fudges", fudges)
+    fudges["center_x"] = cfg.get_default("fudges", "center_x", 0)
+    fudges["center_y"] = cfg.get_default("fudges", "center_y", 0)
 
     channel = cfg.get_default('channel', 0)
     server = cfg.get_default('networktables', '10.27.33.2')
@@ -74,43 +75,31 @@ def run(cfg):
     tables.send_fudge("center_x", fudges['center_x'])
     tables.send_fudge("center_y", fudges['center_y'])
 
+    frame_width = width/2 # This is to calculate the offset in the next function
+
     while True:
         hsv, _ = util.get_hsv(camera)
         masked_img = color_mask.get_mask(hsv, lower, upper)
         target = target_tracker.single_target(masked_img)
 
-        send_target_data(target)
+        send_target_data(target, frame_width)
         update_fudges(tables, cfg)
 
 
-def send_target_data(target):
+def send_target_data(target, frame_width):
     """
     Send the target information over to the NetworkTables (using the `tables`
     interface) including any fudge factor offsets.
     """
+
     if target is not None:
         tables.send('center_x', target["center"]["x"] + fudges["center_x"])
         tables.send('center_y', target["center"]["y"] + fudges["center_y"])
-        # tables.send('distance', target.distance)
-        tables.send('orientation', target["orientation"])
-        tables.send('size', target["size"])
-        tables.send('height', target["height"])
-        tables.send('width', target["width"])
-        tables.send('xdir', target["xpos"][0])
-        tables.send('xmag', target["xpos"][1])
-        tables.send("ydir", target["ypos"][0])
-        tables.send("ymag", target["ypos"][1])
+        tables.send('offset', center_x/frame_width)
     else:
         tables.send('center_x', 0)
         tables.send('center_y', 0)
-        tables.send('orientation', "")
-        tables.send('size', 0)
-        tables.send('height', 0)
-        tables.send('width', 0)
-        tables.send('xdir', "")
-        tables.send('xmag', 0)
-        tables.send("ydir", "")
-        tables.send("ymag", 0)
+        tables.send('offset', 0)
 
 
 def update_fudges(tables, cfg):

@@ -7,6 +7,10 @@ import numpy as np
 import time
 
 
+# Shrink the frame width and height to this size:
+FRAME_WIDTH_GOAL = 300
+
+
 def has_pressed(key, letter):
     """
     Compare a key pressed with an expected letter. The 'key' is a value from
@@ -65,10 +69,12 @@ def get_video(channel=1):
     #    frame = cv2.flip(frame,0)
     #    out.write(frame)
 
-    width = camera.get(cv2.CAP_PROP_FRAME_WIDTH)
-    height = camera.get(cv2.CAP_PROP_FRAME_HEIGHT)
+    orig_width = camera.get(cv2.CAP_PROP_FRAME_WIDTH)
+    orig_height = camera.get(cv2.CAP_PROP_FRAME_HEIGHT)
+    height = orig_height * orig_width/FRAME_WIDTH_GOAL
+    print("Frame width:", FRAME_WIDTH_GOAL, " Frame height:", height)
 
-    return [camera, width, height]
+    return [camera, FRAME_WIDTH_GOAL, height]
 
 
 def get_hsv(camera):
