@@ -91,15 +91,21 @@ def send_target_data(target, frame_width):
     Send the target information over to the NetworkTables (using the `tables`
     interface) including any fudge factor offsets.
     """
-
-    if target is not None:
-        tables.send('center_x', target["center"]["x"] + fudges["center_x"])
-        tables.send('center_y', target["center"]["y"] + fudges["center_y"])
-        tables.send('offset', center_x/frame_width)
-    else:
+    print(target)
+    if target == None:
         tables.send('center_x', 0)
         tables.send('center_y', 0)
         tables.send('offset', 0)
+    else:
+        x = target["center"]["x"] + fudges["center_x"]
+        y = target["center"]["y"] + fudges["center_y"]
+        if abs(x) < 10:
+            offset = 0
+        else:
+            offset = frame_width/x
+        tables.send('center_x', x)
+        tables.send('center_y', y)
+        tables.send('offset', offset)
 
 
 def update_fudges(tables, cfg):
